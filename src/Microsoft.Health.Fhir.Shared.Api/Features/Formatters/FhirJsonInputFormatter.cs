@@ -8,10 +8,12 @@ using System.Buffers;
 using System.Text;
 using System.Threading.Tasks;
 using EnsureThat;
+using Hl7.Fhir.ElementModel;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Health.Fhir.Api.Features.ContentTypes;
+using Microsoft.Health.Fhir.Core.Models;
 using Newtonsoft.Json;
 
 namespace Microsoft.Health.Fhir.Api.Features.Formatters
@@ -69,7 +71,16 @@ namespace Microsoft.Health.Fhir.Api.Features.Formatters
 
                 try
                 {
-                    model = await _parser.ParseAsync<Resource>(jsonReader);
+                    ISourceNode obj = await FhirJsonNode.ReadAsync(jsonReader);
+
+                    if (obj.GetResourceTypeIndicator() == KnownResourceTypes.Bundle)
+                    {
+                        model = obj.ToPoco<Resource>(new PocoBuilderSettings { AllowUnrecognizedEnums = true, IgnoreUnknownMembers = true });
+                    }
+                    else
+                    {
+                        model = obj.ToPoco<Resource>();
+                    }
                 }
                 catch (Exception ex)
                 {
