@@ -15,6 +15,10 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    version: '7.0.203'  # Replace with the desired .NET SDK version
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
