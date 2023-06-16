@@ -18,7 +18,7 @@ variables:
 steps:
 - task: UseDotNet@2
   inputs:
-    version: '6'  # Replace with the desired .NET SDK version
+    version: '6.0'  # Replace with the desired .NET SDK version
     
 - task: NuGetToolInstaller@1
 
